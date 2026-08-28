@@ -1,0 +1,17 @@
+{
+    // Source - https://stackoverflow.com/a/79610290
+    // Posted by Aiman Waheed, modified by community. See post 'Timeline' for change history
+    // Retrieved 2026-08-22, License - CC BY-SA 4.0
+
+    "editor.inlineSuggest.enabled": false,
+    "editor.parameterHints.enabled": false,
+    "[<language>]": {
+        "editor.quickSuggestions": {
+            "comments": "off",
+            "strings": "off",
+            "other": "off"
+        },
+        "editor.suggest.showWords": false,
+        "editor.suggest.showSnippets": false
+    }
+}
