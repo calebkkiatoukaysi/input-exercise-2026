@@ -10,6 +10,21 @@ public class InputExampleGame : Game
     private SpriteBatch _spriteBatch;
     private Ball[] _balls;
 
+    protected KeyboardState currentKeyboardState;
+
+    protected KeyboardState priorKeyboardState;
+
+    protected GamePadState currentGamePadState;
+
+    protected GamePadState priorGamePadState;
+
+    protected MouseState currentMouseState;
+
+    protected MouseState priorMouseState;
+
+    public MathHelper.Random Random {get; init;} = new();
+
+
     public InputExampleGame()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -39,10 +54,47 @@ public class InputExampleGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        currentKeyboardState = Keyboard.GetState();
+        currentGamePadState = GamePad.GetState(PlayerIndex.One);
+        currentMouseState = Mouse.GetState();
+
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || currentKeyboardState.IsKeyDown(Keys.Escape))
             Exit();
 
-        // TODO: Add your update logic here
+        // Keyboard Input
+        if(currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W))
+            _balls[0].Position += new Vector2(0, -100 * (float) gameTime.ElapsedGameTime.TotalSeconds);
+
+        if(currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S))
+            _balls[0].Position += new Vector2(0, 100 * (float) gameTime.ElapsedGameTime.TotalSeconds);
+    
+        if(currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A))
+            _balls[0].Position += new Vector2(-100 * (float) gameTime.ElapsedGameTime.TotalSeconds, 0);
+    
+        if(currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D))
+            _balls[0].Position += new Vector2(100 * (float) gameTime.ElapsedGameTime.TotalSeconds, 0);
+
+        if(currentKeyboardState.IsKeyDown(Keys.Space) && priorKeyboardState.IsKeyUp(Keys.Space))
+            _balls[0].Warp();
+        
+        // gamepad input
+        _balls[1].Position += 100 * (float)gameTime.ElapsedGameTime.Seconds * currentGamePadState.ThumbSticks.Right;
+
+        if(currentGamePadState.Buttons.A == ButtonState.Pressed && priorGamePadState.Buttons.A == ButtonState.Released)
+            _balls[1].Warp();
+
+        //mouse input
+        _balls[2].Position = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
+
+        if(currentMouseState.LeftButton == ButtonState.Pressed && priorMouseState.LeftButton == ButtonState.Released)
+        {
+            _balls[0].Warp();
+            _balls[1].Warp();
+        }
+
+        priorKeyboardState = currentKeyboardState;
+        priorGamePadState = currentGamePadState;
+        priorMouseState = currentMouseState;
 
         base.Update(gameTime);
     }

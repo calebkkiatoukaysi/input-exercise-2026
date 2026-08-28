@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -54,6 +55,15 @@ namespace InputExercise
             if (_texture is null) return; // null reference check
                 
             spriteBatch.Draw(_texture, Position, _color);
+        }
+
+        /// <summary>
+        /// Warps the ball to random position
+        /// </summary>
+        public void Warp()
+        {
+            Position = new Vector2(_game.Random.NextFloat() * (_game.GraphicsDevice.Viewport.Width - _texture.Width),
+             _game.Random.NextFloat() * (_game.GraphicsDevice.Viewport.Height - _texture.Height));
         }
     }
 }
